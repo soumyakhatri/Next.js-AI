@@ -1,7 +1,7 @@
 "use client"
 import { useCompletion } from '@ai-sdk/react'
 
-export default function Completion() {
+export default function Stream() {
     const { input, handleInputChange, handleSubmit, completion, error, isLoading, setInput, stop } = useCompletion({
         api: "/api/stream"
     })

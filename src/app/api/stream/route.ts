@@ -15,5 +15,4 @@ export async function POST(req: Request) {
         console.log("error", error)
         return Response.json({error: "Failed to generate "}, {status: 500})
     }
-
 }

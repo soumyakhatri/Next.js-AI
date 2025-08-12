@@ -1,6 +1,6 @@
 "use client"
 
-import { recipeSchema } from "@/app/api/structured-data/recipeSchema"
+import { recipeSchema } from "@/app/api/structured-data/schema"
 import { experimental_useObject as useObject } from "@ai-sdk/react"
 import { useState } from "react"
 
@@ -60,7 +60,7 @@ export default function StructuredData() {
             }} className="fixed bottom-4 left-0 right-0 mx-auto max-w-2xl px-4">
                 <div className="flex items-center gap-2 bg-[#343541] p-4 rounded-xl border border-[#565869] shadow-md">
                     <input
-                        placeholder="Ask me anything..."
+                        placeholder="Name a dish"
                         className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
                         value={dishName}
                         onChange={(e) => setDishName(e.target.value)}

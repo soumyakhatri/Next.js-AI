@@ -1,5 +1,5 @@
 import { openai } from "@ai-sdk/openai";
-import { recipeSchema } from "./recipeSchema";
+import { recipeSchema } from "./schema";
 import { streamObject } from "ai";
 
 export async function POST(req: Request) {

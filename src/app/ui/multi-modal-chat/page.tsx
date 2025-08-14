@@ -63,6 +63,15 @@ export default function AnalyzeImages() {
                                                 className="rounded-lg max-w-full h-auto"
                                             />
                                         }
+                                        if(part.mediaType?.startsWith("application/pdf")){
+                                            return <iframe
+                                                key={`${message.id}-${index}`}
+                                                src={part.url}
+                                                width={500}
+                                                height={600}   
+                                                title={part.filename ?? `attachment-${index}`}
+                                                                                   />
+                                        }
                                         return null
 
                                     default: return null
@@ -101,7 +110,7 @@ export default function AnalyzeImages() {
                                 type="submit"
                                 className="text-white bg-[#19c37d] hover:bg-[#16ab6a] px-4 py-2 rounded-md transition-colors duration-200"
                             >
-                                Analyze Image
+                                Analyze Files
                             </button>
                         )}
                     </div>
@@ -121,7 +130,7 @@ export default function AnalyzeImages() {
                             >
                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                             </svg>
-                            {files ? `${files.length} file(s) attached` : 'Attach Images'}
+                            {files ? `${files.length} file(s) attached` : 'Attach Files'}
                         </label>
                         <input
                             id="upload-image"

@@ -20,15 +20,23 @@ export default function AnalyzeImages() {
     // console.log('files', files)
     return (
         <>
-            <div>
-                {
-                    messages && messages.length > 0 && messages.map((message) => {
-                        return <div>
-                            <div>{message.role === "user" ? "You:" : "AI:"}</div>
+            <div className="max-w-2xl mx-auto px-4 pt-4 pb-32 min-h-screen">
+                {messages && messages.length === 0 && (
+                    <div className="text-center text-gray-400 mt-8">
+                        Start a conversation by typing a message below
+                    </div>
+                )}
+                
+                {messages && messages.length > 0 && messages.map((message) => (
+                    <div key={message.id} className="mb-4">
+                        <div className="text-sm font-medium text-gray-300 mb-2">
+                            {message.role === "user" ? "You" : "AI"}
+                        </div>
+                        <div className="bg-[#444654] text-white p-4 rounded-xl border border-[#565869] shadow-sm">
                             {message.parts.map((part, index) => {
                                 switch (part.type) {
                                     case "text":
-                                        return part.text
+                                        return <div key={`${message.id}-${index}`}>{part.text}</div>
                                         break;
                                     case "file":
                                         if (part.mediaType?.startsWith("image/")) {
@@ -38,31 +46,63 @@ export default function AnalyzeImages() {
                                                 alt={part.filename ?? `attachment-${index}`}
                                                 width={500}
                                                 height={500}
+                                                className="rounded-lg max-w-full h-auto"
                                             />
                                         }
-
+                                        break;
                                     default:
                                         break;
                                 }
                             })}
                         </div>
-                    })
-                }
+                    </div>
+                ))}
             </div>
-            <div>
-                <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter your text here" />
-                <form onSubmit={(e: FormEvent) => {
-                    e.preventDefault()
-                    sendMessage({
-                        text: input,
-                        files
-                    })
-                    setInput("")
-                    setFiles(undefined)
-                }}>
-                    <div>
-                        <label htmlFor="upload-image">Attach Images</label>
-                        <input
+            
+            <form onSubmit={(e: FormEvent) => {
+                e.preventDefault()
+                sendMessage({
+                    text: input,
+                    files
+                })
+                setInput("")
+                setFiles(undefined)
+            }} className="fixed bottom-4 left-0 right-0 mx-auto max-w-2xl px-4">
+                <div className="flex flex-col gap-3 bg-[#343541] p-4 rounded-xl border border-[#565869] shadow-md">
+                    <div className="flex items-center gap-2">
+                        <input 
+                            type="text" 
+                            value={input} 
+                            onChange={e => setInput(e.target.value)} 
+                            placeholder="Enter your text here" 
+                            className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
+                        />
+                        <button 
+                            type="submit"
+                            className="text-white bg-[#19c37d] hover:bg-[#16ab6a] px-4 py-2 rounded-md transition-colors duration-200"
+                        >
+                            Analyze Image
+                        </button>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                        <label htmlFor="upload-image" className="text-gray-300 text-sm cursor-pointer flex items-center gap-2">
+                            <svg 
+                                width="20" 
+                                height="20" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                strokeWidth="2" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                                className="text-gray-300 hover:text-gray-200 transition-colors duration-200"
+                            >
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                            </svg>
+                            {files ? `${files.length} file(s) attached` : 'Attach Images'}
+                        </label>
+                        <input 
                             id="upload-image"
                             type="file"
                             onChange={(e) => {
@@ -74,11 +114,9 @@ export default function AnalyzeImages() {
                             ref={imageRef}
                             multiple
                         />
-                        <span>{files ? `${files.length} file(s) attached` : 'Attach File'}</span>
                     </div>
-                    <button type="submit">Analyze Image</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </>
     )
 }

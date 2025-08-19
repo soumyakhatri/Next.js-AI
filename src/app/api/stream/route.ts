@@ -5,7 +5,7 @@ import { streamText } from 'ai'
 export async function POST(req: Request) {
     try {
         const { prompt } = await req.json()
-        console.log("prompt===", prompt)
+
         const result = streamText({
             model: openai("gpt-4.1-nano"),
             prompt

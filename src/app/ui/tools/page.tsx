@@ -25,7 +25,7 @@ export default function ToolChat() {
 
     return (
         <>
-            {error && <div className="text-red-500 mb-4">{error.message}</div>}
+            {error && <div className="text-red-500 mb-4 font-medium bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg">{error.message}</div>}
 
             <div className="max-w-2xl mx-auto px-4 pt-4 pb-32 min-h-screen">
                 {messages.length === 0 && (
@@ -49,19 +49,43 @@ export default function ToolChat() {
                                         switch (part.state) {
                                             case "input-streaming":
                                                 return (
-                                                    <div key={`${message.id}-getWeather-${index}`}>
-                                                        <div>Receiving weather request...</div>
-                                                        <pre>
+                                                    <div key={`${message.id}-getWeather-${index}`} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-3">
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                                            <span className="text-blue-300 font-medium text-sm">Receiving weather request...</span>
+                                                        </div>
+                                                        <pre className="text-xs bg-[#2d2d2d] p-2 rounded border border-[#565869] overflow-x-auto text-gray-300">
                                                             {JSON.stringify(part.input, null, 2)}
                                                         </pre>
                                                     </div>
                                                 )
                                             case "input-available":
-                                                return <div key={`${message.id}-getWeather-${index}`}>Getting weather for {part.input.city}</div>
+                                                return (
+                                                    <div key={`${message.id}-getWeather-${index}`} className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 mb-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                                                            <span className="text-green-300 text-sm">Getting weather for <span className="font-semibold">{part.input.city}</span></span>
+                                                        </div>
+                                                    </div>
+                                                )
                                             case "output-available":
-                                                return <div key={`${message.id}-getWeather-${index}`}>Weather is {part.output}</div>
+                                                return (
+                                                    <div key={`${message.id}-getWeather-${index}`} className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 mb-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                                                            <span className="text-emerald-300 text-sm">Weather: <span className="font-semibold">{part.output}</span></span>
+                                                        </div>
+                                                    </div>
+                                                )
                                             case "output-error":
-                                                return <div key={`${message.id}-getWeather-${index}`}>Error: {part.errorText}</div>
+                                                return (
+                                                    <div key={`${message.id}-getWeather-${index}`} className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                                                            <span className="text-red-300 text-sm">Error: <span className="font-semibold">{part.errorText}</span></span>
+                                                        </div>
+                                                    </div>
+                                                )
                                             default:
                                                 return null;
                                         }

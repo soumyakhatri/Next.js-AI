@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { FormEvent, useState } from "react"
 import { ChatMessage } from "@/app/api/api-tool/route";
+import { WeatherCard } from "./WeatherCard";
 
 export default function ToolChat() {
     const [input, setInput] = useState("")
@@ -68,15 +69,16 @@ export default function ToolChat() {
                                                 )
                                             case "output-available":
                                                 return (
-                                                    <div key={`${message.id}-getWeather-${index}`} className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 mb-3">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                                                            <span className="text-emerald-300 text-sm">City: <span className="font-semibold">{part.output.location.name}</span></span>
-                                                            <span className="text-emerald-300 text-sm">Country Name: <span className="font-semibold">{part.output.location.country}</span></span>
-                                                            <span className="text-emerald-300 text-sm">Local Time: <span className="font-semibold">{part.output.location.localTime}</span></span>
-                                                            <span className="text-emerald-300 text-sm">Temperature: <span className="font-semibold">{part.output.current.temp_c}</span></span>
+                                                    <div
+                                                        key={`${message.id}-getWeather-${index}`}
+                                                        className="mt-1 mb-2"
+                                                    >
+                                                        <div className="text-sm text-zinc-400">🌤️ Weather</div>
+                                                        <div className="text-sm text-zinc-300">
+                                                            <WeatherCard weatherData={part.output} />
                                                         </div>
                                                     </div>
+
                                                 )
                                             case "output-error":
                                                 return (

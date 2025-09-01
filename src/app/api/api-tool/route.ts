@@ -17,7 +17,7 @@ const tools = {
                 location: {
                     name: data.location.name,
                     country: data.location.country,
-                    localTime: data.location.localTime
+                    localtime: data.location.localtime
                 },
                 current: {
                     temp_c: data.current.temp_c,

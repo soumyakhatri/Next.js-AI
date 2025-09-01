@@ -3,10 +3,11 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { FormEvent, useState } from "react"
+import { ChatMessage } from "@/app/api/tools/route";
 
 export default function ToolChat() {
     const [input, setInput] = useState("")
-    const { sendMessage, messages, error, status, stop } = useChat({
+    const { sendMessage, messages, error, status, stop } = useChat<ChatMessage>({
         transport: new DefaultChatTransport({
             api: "/api/tools"
         })
@@ -25,14 +26,14 @@ export default function ToolChat() {
     return (
         <>
             {error && <div className="text-red-500 mb-4">{error.message}</div>}
-            
+
             <div className="max-w-2xl mx-auto px-4 pt-4 pb-32 min-h-screen">
                 {messages.length === 0 && (
                     <div className="text-center text-gray-400 mt-8">
                         Start a conversation by typing a message below
                     </div>
                 )}
-                
+
                 {messages.map(message => (
                     <div key={message.id} className="mb-4">
                         <div className="text-sm font-medium text-gray-300 mb-2">
@@ -43,32 +44,51 @@ export default function ToolChat() {
                                 switch (part.type) {
                                     case "text":
                                         return <div key={`${message.id}-${index}`}>{part.text}</div>
-                                        break;
+
+                                    case "tool-getWeather":
+                                        switch (part.state) {
+                                            case "input-streaming":
+                                                return (
+                                                    <div key={`${message.id}-getWeather-${index}`}>
+                                                        <div>Receiving weather request...</div>
+                                                        <pre>
+                                                            {JSON.stringify(part.input, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                )
+                                            case "input-available":
+                                                return <div key={`${message.id}-getWeather-${index}`}>Getting weather for {part.input.city}</div>
+                                            case "output-available":
+                                                return <div key={`${message.id}-getWeather-${index}`}>Weather is {part.output}</div>
+                                            case "output-error":
+                                                return <div key={`${message.id}-getWeather-${index}`}>Error: {part.errorText}</div>
+                                            default:
+                                                return null;
+                                        }
 
                                     default: return null
-                                        break;
                                 }
                             })}
                         </div>
                     </div>
                 ))}
-                
+
                 {(status === "streaming" || status === "submitted") && (
                     <div className="text-center text-gray-400 mt-4">
                         Loading messages...
                     </div>
                 )}
             </div>
-            
+
             <form onSubmit={handleSubmit} className="fixed bottom-4 left-0 right-0 mx-auto max-w-2xl px-4">
                 <div className="flex items-center gap-2 bg-[#343541] p-4 rounded-xl border border-[#565869] shadow-md">
-                    <input 
+                    <input
                         placeholder="Type your message..."
                         className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
-                        value={input} 
-                        onChange={e => setInput(e.target.value)} 
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
                     />
-                    
+
                     {(status === "streaming" || status === "submitted") ? (
                         <button
                             onClick={stop}
